@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from rest_framework import generics, permissions
+from .models import Despesa
+from .serializers import DespesaSerializer
 
-# Create your views here.
+class DespesaListAPIView(generics.ListAPIView):
+    serializer_class = DespesaSerializer
+    permissions_classes = [permissions.AllowAny]
+    queryset = Despesa.objects.all()
