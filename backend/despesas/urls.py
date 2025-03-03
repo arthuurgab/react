@@ -4,5 +4,7 @@ from . import views
 app_name = 'despesas'
 
 urlpatterns = [
-    path('despesas/', views.DespesaListAPIView.as_view(), name='despesa-list'),
+    path('', views.despesaApiOverview, name='home'),
+    path('create/', views.add_depesas, name='add-despesa'),
+    path('all/', views.view_despesas, name='view-despesa')
 ]
