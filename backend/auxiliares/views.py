@@ -5,9 +5,8 @@ from rest_framework import status
 from .models import tipoDespesa, tipoPrioridade
 from .serializers import tipoDespesaSerializer, tipoPrioridadeSerializer
 
-# ROTAS
-
-@api_view(['GET']) # Define que essa função só pode ser acessa através do metodo GET
+# ----------------------------- ROTAS -----------------------------
+@api_view(['GET'])
 def tipoDespesaApiOverview(request):
     api_urls = {
         'all_tipoDespesa': '/',
@@ -17,7 +16,7 @@ def tipoDespesaApiOverview(request):
     } 
     return Response(api_urls)
 
-@api_view(['GET']) # Define que essa função só pode ser acessa através do metodo POST
+@api_view(['GET'])
 def tipoPrioridadeApiOverview(request):
     api_urls = {
         'all_tipoPrioridade': '/',
@@ -26,32 +25,37 @@ def tipoPrioridadeApiOverview(request):
         'Delete': '/tipoPrioridade/id/delete'
     } 
     return Response(api_urls)
+# -----------------------------------------------------------------=
 
-
-
-
-
-@api_view(['GET']) # Define que essa função só pode ser acessa através do metodo POST
+@api_view(['GET']) 
 def tipoDespesaView(request):
     if request.query_params:
-        tipoD = tipoDespesa.objects.filter(**request.query_params.dict()) # Permite Filtrar na URL http://
+        tipoD = tipoDespesa.objects.filter(**request.query_params.dict()) 
     else:
-        tipoD = tipoDespesa.objects.all() # Trás todos os objetos do banco
+        tipoD = tipoDespesa.objects.all() 
     if tipoD:
-        serializer = tipoDespesaSerializer(tipoD, many=True) # Many True é necessario qunado trazemos vários objetos do banco, sem ele dará erro
+        serializer = tipoDespesaSerializer(tipoD, many=True)
         return Response(serializer.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['POST'])
+def tipoDespesaCreate(request):
+    serializer = tipoDespesaSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET']) # Define que essa função só pode ser acessa através do metodo POST
+@api_view(['GET']) 
 def tipoPrioridadeView(request):
     if request.query_params:
-        tipoP = tipoPrioridade.objects.filter(**request.query_params.dict()) # Permite Filtrar na URL http://
+        tipoP = tipoPrioridade.objects.filter(**request.query_params.dict())
     else:
-        tipoP = tipoPrioridade.objects.all() # Trás todos os objetos do banco
+        tipoP = tipoPrioridade.objects.all() 
     if tipoP:
-        serializer = tipoDespesaSerializer(tipoP, many=True) # Many True é necessario qunado trazemos vários objetos do banco, sem ele dará erro
+        serializer = tipoDespesaSerializer(tipoP, many=True)  
         return Response(serializer.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
