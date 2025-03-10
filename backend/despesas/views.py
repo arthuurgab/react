@@ -4,6 +4,7 @@ from rest_framework import serializers
 from rest_framework import status
 from .models import Despesa
 from .serializers import DespesaSerializer 
+from django.shortcuts import get_object_or_404
 
 @api_view(['GET']) # Define que essa função só pode ser acessa através do metodo GET
 def despesaApiOverview(request):
@@ -38,3 +39,9 @@ def view_despesas(request):
         return Response(serializer.data)
     else:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['DELETE'])
+def delete_despesa(request, pk):
+    despesa = get_object_or_404(Despesa, pk=pk)
+    despesa.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
