@@ -45,3 +45,14 @@ def delete_despesa(request, pk):
     despesa = get_object_or_404(Despesa, pk=pk)
     despesa.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST'])
+def update_despesa(request, pk):
+    despesa = Despesa.objects.get(pk=pk)
+    data = DespesaSerializer(instance=despesa, data=request.data)
+
+    if data.is_valid():
+        data.save()
+        return Response(data.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND)
